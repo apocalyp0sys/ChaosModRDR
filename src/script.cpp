@@ -203,6 +203,9 @@ void ChaosMod::ActivateEffect(Effect* effect)
 		effect->ActivationTime = GetTickCount();
 		effect->DeactivationTime = effect->ActivationTime + (effect->EffectDuration * 1000);
 	}
+	else {
+		effect->ActivationTime = GetTickCount();
+	}
 
 	prevActivatedEffect = effect;
 
@@ -214,6 +217,15 @@ void ChaosMod::ActivateEffect(Effect* effect)
 	}
 	else
 	{
+		/* replace effect if already exists with same id */
+		for (int i = 0; i < this->activeEffects.size(); i++) {
+			auto* listedEffect = activeEffects[i];
+			if (effect->ID == listedEffect->ID) {
+				activeEffects.erase(activeEffects.begin() + i);
+				i--;
+				break;
+			}
+		}
 		this->activeEffects.push_back(effect);
 	}
 }
@@ -428,6 +440,13 @@ void ChaosMod::Update()
 				effect->OnDeactivate();
 				activeEffects.erase(activeEffects.begin() + i);
 				i--;
+			}
+			if (effect && !effect->bTimed) {
+				if (GetTickCount() >= effect->ActivationTime + 8000)
+				{
+					activeEffects.erase(activeEffects.begin() + i);
+					i--;
+				}
 			}
 		}
 	}
