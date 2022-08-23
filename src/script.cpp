@@ -417,7 +417,7 @@ void ChaosMod::Update()
 			ChaosMod::globalMutex.unlock();
 		}
 
-		bVotingEnabled = true;
+		bVotingEnabled = false;
 
 		for (int32_t i = 0; i < activeEffects.size(); i++)
 		{
@@ -645,7 +645,9 @@ void ChaosMod::DrawUI()
 	static const float ProgressBarHeight = 18.0f / 1080.f;
 
 	/** Draw progress bar background */
-	GRAPHICS::DRAW_RECT(0.5f, ProgressBarHeight / 2.0f, 1.0f, ProgressBarHeight, 0, 0, 0, 168, 0, 0);
+	if (bEffectsActivatesAfterTimer) {
+		GRAPHICS::DRAW_RECT(0.5f, ProgressBarHeight / 2.0f, 1.0f, ProgressBarHeight, 0, 0, 0, 168, 0, 0);
+	}
 
 	float effectTimeoutValue = float(float(GetTickCount() - timeoutStartTime) / float(timeoutEndTime - timeoutStartTime));
 
@@ -667,7 +669,9 @@ void ChaosMod::DrawUI()
 	}
 
 	/** Draw progress bar foreground */
-	GRAPHICS::DRAW_RECT(effectTimeoutValue / 2.0f, ProgressBarHeight / 2.0f, effectTimeoutValue, ProgressBarHeight, color.R, color.G, color.B, color.A, 0, 0);
+	if (bEffectsActivatesAfterTimer) {
+		GRAPHICS::DRAW_RECT(effectTimeoutValue / 2.0f, ProgressBarHeight / 2.0f, effectTimeoutValue, ProgressBarHeight, color.R, color.G, color.B, color.A, 0, 0);
+	}
 
 	for (int32_t i = 0; i < activeEffects.size(); i++)
 	{

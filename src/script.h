@@ -179,7 +179,7 @@ private:
 private:
 	/** Debug */
 
-	bool bEffectsActivatesAfterTimer = true;
+	bool bEffectsActivatesAfterTimer = false;
 
 	/** For debug only, disables effect activation after timer  */
 	void ToggleDefaultEffectActivation();
