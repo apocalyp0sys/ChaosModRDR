@@ -65,21 +65,6 @@
     <ClInclude Include="src\script.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\rdr2_sdk\inc\enums.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rdr2_sdk\inc\main.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rdr2_sdk\inc\nativeCaller.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rdr2_sdk\inc\natives.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\rdr2_sdk\inc\types.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="src\Effects\effect.h">
       <Filter>Source Files\Effects</Filter>
     </ClInclude>
@@ -107,5 +92,23 @@
     <ClInclude Include="src\Misc\config.h">
       <Filter>Source Files\Config</Filter>
     </ClInclude>
+    <ClInclude Include="inc\enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\nativeCaller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\natives.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\types.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ScriptHookRDR2.lib" />
   </ItemGroup>
 </Project>

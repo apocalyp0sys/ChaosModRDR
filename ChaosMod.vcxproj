@@ -31,11 +31,11 @@
     <ClCompile Include="src\server.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\rdr2_sdk\inc\enums.h" />
-    <ClInclude Include="..\rdr2_sdk\inc\main.h" />
-    <ClInclude Include="..\rdr2_sdk\inc\nativeCaller.h" />
-    <ClInclude Include="..\rdr2_sdk\inc\natives.h" />
-    <ClInclude Include="..\rdr2_sdk\inc\types.h" />
+    <ClInclude Include="inc\enums.h" />
+    <ClInclude Include="inc\main.h" />
+    <ClInclude Include="inc\nativeCaller.h" />
+    <ClInclude Include="inc\natives.h" />
+    <ClInclude Include="inc\types.h" />
     <ClInclude Include="src\Effects\effect.h" />
     <ClInclude Include="src\Effects\misc.h" />
     <ClInclude Include="src\Effects\peds.h" />
@@ -46,6 +46,9 @@
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\script.h" />
     <ClInclude Include="src\server.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="ScriptHookRDR2.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -174,7 +177,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>thirdparty\asio\asio\include;thirdparty\rapidjson\include;thirdparty\websocketpp;E:\source\rdr2_sdk\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>thirdparty\asio\asio\include;thirdparty\rapidjson\include;thirdparty\websocketpp;inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
