@@ -62,6 +62,8 @@ public:
 	std::string ID = "";
 	std::string name = "";
 
+	std::string cause = "";
+
 	bool bTimed = false;
 
 	/** In seconds */

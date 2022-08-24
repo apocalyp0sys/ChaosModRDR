@@ -110,6 +110,10 @@ void WebSocketServer::OnMessage(websocketpp::connection_hdl hdl, _server::messag
 	{
 		OnTwitchViewerSpawned(document);
 	}
+	else if (eventType == "activate-specific-effect")
+	{
+		OnSpecificEffectActivated(document);
+	}
 }
 
 void WebSocketServer::OnConnect(websocketpp::connection_hdl hdl)
@@ -142,6 +146,8 @@ void WebSocketServer::SendMessageToClient(std::string msg)
 
 void WebSocketServer::SendMessageToClient(const char* msg)
 {
+	// Looks like this check is not enough.
+	// Mod crashes when tries to send something with no clients connected
 	if (this->client)
 	{
 		instance.send(*this->client, msg, websocketpp::frame::opcode::value::text);
@@ -196,6 +202,34 @@ void WebSocketServer::Stop()
 		delete this->client;
 		this->client = nullptr;
 	}
+}
+
+void WebSocketServer::OnSpecificEffectActivated(rapidjson::Document& document)
+{
+	int32_t specificID = -1;
+	std::string cause = "";
+
+	try
+	{
+		if (!document.HasMember("index"))
+		{
+			return;
+		}
+
+		specificID = document["index"].GetInt();
+		cause = document["cause"].GetString();
+	}
+	catch (int err)
+	{
+		//
+	}
+
+	ChaosMod::globalMutex.lock();
+
+	ChaosMod::Singleton->selectedEffectIndexID = specificID;
+	ChaosMod::Singleton->selectedEffectCause = cause;
+
+	ChaosMod::globalMutex.unlock();
 }
 
 void WebSocketServer::OnNewEffectActivated(rapidjson::Document &document)

@@ -104,6 +104,7 @@ public:
 	void ToggleModStatus();
 
 	void ActivateEffect(Effect* effect);
+	void ActivateEffectWithCause(Effect* effect, std::string cause);
 
 	WebSocketServer* wsServer = nullptr;
 
@@ -226,6 +227,13 @@ public:
 	 * Index of winner effect in the Twitch poll
 	 */
 	int32_t twitchWinnerID = -1;
+	int32_t selectedEffectIndexID = -1;
+
+	/**
+	 * what (who) caused effect
+	 */
+	std::string selectedEffectCause;
+
 public:
 	/** Difference between last and this tick in ms */
 	static uint32_t _DeltaTime;

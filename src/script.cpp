@@ -124,7 +124,7 @@ void ChaosMod::ToggleModStatus()
 		{
 			if (config.bTwitch && wsServer)
 			{
-				wsServer->SendMessageToClient("mod_enabled");
+				// wsServer->SendMessageToClient("mod_enabled");
 			}
 		}
 
@@ -143,7 +143,7 @@ void ChaosMod::ToggleModStatus()
 
 		if (config.bTwitch && wsServer)
 		{
-			wsServer->SendMessageToClient("mod_disabled");
+			//wsServer->SendMessageToClient("mod_disabled");
 		}
 
 		ShowNotification2("~COLOR_PLAYER_STATUS_NEGATIVE~Chaos Mod Disabled", "", 3500, "scoretimer_textures", "scoretimer_generic_cross", LinearColor(204, 0, 0, 255));
@@ -228,6 +228,18 @@ void ChaosMod::ActivateEffect(Effect* effect)
 		}
 		this->activeEffects.push_back(effect);
 	}
+}
+
+void ChaosMod::ActivateEffectWithCause(Effect* effect, std::string cause)
+{
+	if (!effect)
+	{
+		return;
+	}
+
+	effect->cause = cause;
+
+	ActivateEffect(effect);
 }
 
 void ChaosMod::StartNodeProcess()
@@ -399,9 +411,16 @@ void ChaosMod::Update()
 				effect->OnTick();
 			}
 		}
+		if (effect && !effect->bTimed) {
+			if (GetTickCount() >= effect->ActivationTime + 8000)
+			{
+				activeEffects.erase(activeEffects.begin() + i);
+				i--;
+			}
+		}
 	}
 
-	if (timeoutVotingStartTime && !bVotingEnabled && GetTickCount() >= timeoutVotingStartTime)
+	/*if (timeoutVotingStartTime && !bVotingEnabled && GetTickCount() >= timeoutVotingStartTime)
 	{
 		if (config.bTwitch && wsServer)
 		{
@@ -430,26 +449,7 @@ void ChaosMod::Update()
 		}
 
 		bVotingEnabled = false;
-
-		for (int32_t i = 0; i < activeEffects.size(); i++)
-		{
-			auto* effect = activeEffects[i];
-
-			if (effect && !effect->bTimed)
-			{
-				effect->OnDeactivate();
-				activeEffects.erase(activeEffects.begin() + i);
-				i--;
-			}
-			if (effect && !effect->bTimed) {
-				if (GetTickCount() >= effect->ActivationTime + 8000)
-				{
-					activeEffects.erase(activeEffects.begin() + i);
-					i--;
-				}
-			}
-		}
-	}
+	}*/
 
 	if (timeoutEndTime && GetTickCount() >= timeoutEndTime)
 	{
@@ -461,7 +461,7 @@ void ChaosMod::Update()
 			{
 				ChaosMod::globalMutex.lock();
 
-				wsServer->SendMessageToClient("vote_ended");
+				//wsServer->SendMessageToClient("vote_ended");
 
 				ChaosMod::globalMutex.unlock();
 			}
@@ -549,6 +549,22 @@ void ChaosMod::Update()
 		twitchViewerNameToSpawn = "";
 	}
 
+	if (selectedEffectIndexID != -1) {
+		if (selectedEffectIndexID < config.effects.size()) {
+			ConfigEffect& configEffect = config.effects[selectedEffectIndexID];
+			auto* effect = EffectsMap[configEffect.id];
+			if (selectedEffectCause.size() > 0) {
+				ActivateEffectWithCause(effect, selectedEffectCause);
+			}
+			else {
+				ActivateEffect(effect);
+			}
+			prevActivatedEffect = effect;
+			selectedEffectIndexID = -1;
+			selectedEffectCause = "";
+		}
+	}
+
 	ChaosMod::globalMutex.unlock();
 
 	if (!twitchViewerName.empty())
@@ -575,10 +591,10 @@ void ChaosMod::InputTick()
 
 	if (IsModEnabled())
 	{
-		if (isKeyPressed(config.controls.toggleEffects))
-		{
-			ToggleDefaultEffectActivation();
-		}
+		//if (isKeyPressed(config.controls.toggleEffects))
+		//{
+		//	ToggleDefaultEffectActivation();
+		//}
 
 		if (isKeyPressed(config.controls.testEffect))
 		{
@@ -652,10 +668,10 @@ void ChaosMod::InputTick()
 	 * For unknown reason, in debug mode mod breaks when trying to disable it with Ctrl+R if websocketpp loop is active
 	 * So you need to press F11 first to stop the websocket server and terminate its thread
 	*/
-	if (isKeyPressed(VK_F11))
-	{
-		ChaosMod::StopServer();
-	}
+	//if (isKeyPressed(VK_F11))
+	//{
+	//	ChaosMod::StopServer();
+	//}
 }
 
 void ChaosMod::DrawUI()
@@ -826,7 +842,13 @@ void ChaosMod::DrawEffectInUI(Effect* effect, int32_t index)
 		effectName += "[META] ";
 	}
 	
-	effectName += effect->name + "</font>";
+	effectName += effect->name;
+
+	if (effect->cause.size() > 0) {
+		effectName += " | </font><font face='$body2'>" + effect->cause;
+	}
+
+	effectName += "</font>";
 		
 	char* varString = GAMEPLAY::CREATE_STRING(10, (char*)"LITERAL_STRING", (char*)effectName.c_str());
 
@@ -1086,7 +1108,10 @@ void ChaosMod::ActivateSelectedEffect()
 
 		if (effect)
 		{
+			ChaosMod::globalMutex.lock();
+			effect->cause = "";
 			ActivateEffect(effect);
+			ChaosMod::globalMutex.unlock();
 		}
 
 		bEffectSelectionVisible = false;
@@ -1423,7 +1448,7 @@ bool ChaosMod::RequestTwitchViewerNameToSpawn()
 		return false;
 	}
 
-	wsServer->SendMessageToClient("request-twitch-viewer-name");
+	//wsServer->SendMessageToClient("request-twitch-viewer-name");
 
 	return true;
 }
