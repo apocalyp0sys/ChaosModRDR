@@ -65,6 +65,7 @@ public:
 	std::string cause = "";
 
 	bool bTimed = false;
+	bool rolledAsRandom = false;
 
 	/** In seconds */
 	uint32_t EffectDuration = 0;

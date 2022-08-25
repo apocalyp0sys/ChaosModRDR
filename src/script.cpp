@@ -6,6 +6,8 @@
 #include <tlhelp32.h>
 #include <filesystem>
 #include <fstream>
+#include <stdlib.h>
+#include <time.h>
 
 ChaosMod* ChaosMod::Singleton = nullptr;
 std::mutex ChaosMod::globalMutex = std::mutex();
@@ -146,7 +148,7 @@ void ChaosMod::ToggleModStatus()
 			//wsServer->SendMessageToClient("mod_disabled");
 		}
 
-		ShowNotification2("~COLOR_PLAYER_STATUS_NEGATIVE~Chaos Mod Disabled", "", 3500, "scoretimer_textures", "scoretimer_generic_cross", LinearColor(204, 0, 0, 255));
+		ShowNotification2("~COLOR_PLAYER_STATUS_NEGATIVE~EPICDARY MOD UNLOADED", "", 3500, "scoretimer_textures", "scoretimer_generic_cross", LinearColor(204, 0, 0, 255));
 
 		for (auto ped : ChaosMod::pedsSet)
 		{
@@ -236,11 +238,49 @@ void ChaosMod::ActivateEffectWithCause(Effect* effect, std::string cause)
 	{
 		return;
 	}
-
+	effect->rolledAsRandom = false;
 	effect->cause = cause;
 
 	ActivateEffect(effect);
 }
+
+void ChaosMod::ActivateEffectWithCauseAsRandom(Effect* effect, std::string cause)
+{
+	if (!effect)
+	{
+		return;
+	}
+
+	effect->cause = cause;
+	effect->rolledAsRandom = true;
+
+	ActivateEffect(effect);
+}
+
+void ChaosMod::ActivateEffectAsRandom(Effect* effect)
+{
+	if (!effect)
+	{
+		return;
+	}
+
+	effect->rolledAsRandom = true;
+
+	ActivateEffect(effect);
+}
+
+void ChaosMod::ActivateEffectAsNotRandom(Effect* effect)
+{
+	if (!effect)
+	{
+		return;
+	}
+
+	effect->rolledAsRandom = false;
+
+	ActivateEffect(effect);
+}
+
 
 void ChaosMod::StartNodeProcess()
 {
@@ -476,7 +516,7 @@ void ChaosMod::Update()
 				auto effects = GenerateEffectsWithChances(maxEffects);
 				for (auto* effect : effects)
 				{
-					ActivateEffect(effect);
+					ActivateEffectAsNotRandom(effect);
 				}
 
 				if (effects[0])
@@ -505,7 +545,7 @@ void ChaosMod::Update()
 		{
 			MetaEffect* effect = enabledMetaEffects[rand() % enabledMetaEffects.size()];
 
-			ActivateEffect(effect);
+			ActivateEffectAsNotRandom(effect);
 			activeMeta = effect;
 
 			if (effect->ID == "total_chaos" && !bVotingEnabled)
@@ -524,7 +564,7 @@ void ChaosMod::Update()
 		if (twitchWinnerID < pollEffects.size())
 		{
 			auto* effect = pollEffects[twitchWinnerID];
-			ActivateEffect(effect);
+			ActivateEffectAsNotRandom(effect);
 			prevActivatedEffect = effect;
 
 			pollEffects.clear();
@@ -557,12 +597,28 @@ void ChaosMod::Update()
 				ActivateEffectWithCause(effect, selectedEffectCause);
 			}
 			else {
-				ActivateEffect(effect);
+				ActivateEffectAsNotRandom(effect);
 			}
 			prevActivatedEffect = effect;
 			selectedEffectIndexID = -1;
 			selectedEffectCause = "";
 		}
+	}
+
+	if (doRandomEffect != -1) {
+			srand(time(NULL)); //initialize the random seed
+			int randIndex = rand() % config.effects.size(); //generates a random number between 0 and 3
+			ConfigEffect& configEffect = config.effects[randIndex];
+			auto* effect = EffectsMap[configEffect.id];
+			if (selectedEffectCause.size() > 0) {
+				ActivateEffectWithCauseAsRandom(effect, selectedEffectCause);
+			}
+			else {
+				ActivateEffectAsRandom(effect);
+			}
+			prevActivatedEffect = effect;
+			doRandomEffect = -1;
+			selectedEffectCause = "";
 	}
 
 	ChaosMod::globalMutex.unlock();
@@ -826,6 +882,9 @@ void ChaosMod::DrawEffectInUI(Effect* effect, int32_t index)
 		color.B = Lerp(startColor.B, endColor.B, alpha);
 		
 		UI::SET_TEXT_COLOR_RGBA(color.R, color.G, color.B, 240);
+	}
+	else if (effect->rolledAsRandom) {
+		UI::SET_TEXT_COLOR_RGBA(255, 40, 40, 240);
 	}
 	else
 	{
@@ -1110,6 +1169,7 @@ void ChaosMod::ActivateSelectedEffect()
 		{
 			ChaosMod::globalMutex.lock();
 			effect->cause = "";
+			effect->rolledAsRandom = false;
 			ActivateEffect(effect);
 			ChaosMod::globalMutex.unlock();
 		}

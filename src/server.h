@@ -27,6 +27,7 @@ private:
 	websocketpp::connection_hdl* client = nullptr;
 
 	void OnSpecificEffectActivated(rapidjson::Document& document);
+	void OnRandomEffectActivated(rapidjson::Document& document);
 	void OnNewEffectActivated(rapidjson::Document& document);
 	void OnTwitchViewerSpawned(rapidjson::Document &document);
 

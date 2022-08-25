@@ -114,6 +114,10 @@ void WebSocketServer::OnMessage(websocketpp::connection_hdl hdl, _server::messag
 	{
 		OnSpecificEffectActivated(document);
 	}
+	else if (eventType == "activate-random-effect")
+	{
+		OnRandomEffectActivated(document);
+	}
 }
 
 void WebSocketServer::OnConnect(websocketpp::connection_hdl hdl)
@@ -217,7 +221,11 @@ void WebSocketServer::OnSpecificEffectActivated(rapidjson::Document& document)
 		}
 
 		specificID = document["index"].GetInt();
-		cause = document["cause"].GetString();
+		if (document.HasMember("cause"))
+		{
+			cause = document["cause"].GetString();
+		}
+		
 	}
 	catch (int err)
 	{
@@ -227,6 +235,31 @@ void WebSocketServer::OnSpecificEffectActivated(rapidjson::Document& document)
 	ChaosMod::globalMutex.lock();
 
 	ChaosMod::Singleton->selectedEffectIndexID = specificID;
+	ChaosMod::Singleton->selectedEffectCause = cause;
+
+	ChaosMod::globalMutex.unlock();
+}
+
+void WebSocketServer::OnRandomEffectActivated(rapidjson::Document& document)
+{
+	int32_t doRandomEffect = 1;
+	std::string cause = "";
+
+	try
+	{
+		if (document.HasMember("cause"))
+		{
+			cause = document["cause"].GetString();
+		}
+	}
+	catch (int err)
+	{
+		//
+	}
+
+	ChaosMod::globalMutex.lock();
+
+	ChaosMod::Singleton->doRandomEffect = doRandomEffect;
 	ChaosMod::Singleton->selectedEffectCause = cause;
 
 	ChaosMod::globalMutex.unlock();

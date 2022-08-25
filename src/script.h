@@ -105,6 +105,10 @@ public:
 
 	void ActivateEffect(Effect* effect);
 	void ActivateEffectWithCause(Effect* effect, std::string cause);
+	void ActivateEffectWithCauseAsRandom(Effect* effect, std::string cause);
+	void ActivateEffectAsRandom(Effect* effect);
+	void ActivateEffectAsNotRandom(Effect* effect);
+	
 
 	WebSocketServer* wsServer = nullptr;
 
@@ -228,6 +232,8 @@ public:
 	 */
 	int32_t twitchWinnerID = -1;
 	int32_t selectedEffectIndexID = -1;
+	int32_t doRandomEffect = -1;
+	
 
 	/**
 	 * what (who) caused effect
