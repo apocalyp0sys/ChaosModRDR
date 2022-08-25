@@ -130,7 +130,7 @@ void ChaosMod::ToggleModStatus()
 
 		std::string effectsNumStr = "~q~Loaded ~COLOR_GOLD~" + std::to_string(AllEffects.size()) + "~q~ effects";
 
-		ShowNotification2("~COLOR_GREEN~Chaos Mod Enabled", effectsNumStr.c_str(), 3500, "scoretimer_textures", "scoretimer_generic_tick", LinearColor(77, 170, 104, 255));
+		ShowNotification2("~COLOR_GREEN~EPICDARY MOD LOADED", effectsNumStr.c_str(), 3500, "scoretimer_textures", "scoretimer_generic_tick", LinearColor(77, 170, 104, 255));
 	}
 	else
 	{
