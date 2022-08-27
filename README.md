@@ -1,7 +1,52 @@
+# Fork notes
+
+This fork monstrously modifies original repo. Main purpose of this fork is to be able to control Chaos Mod via websocket, disabling timed effect activation.
+Please refer to [original mod repo](https://github.com/clixff/ChaosModRDR) first.
+
+<p align="center">
+   <img src="https://i.imgur.com/G8VfFzK.jpeg" alt="ugly"><br>
+   <em>This image visualises my changes to the original mod</em>
+</p>
+
+### Usage
+
+1. Launch game with mod
+2. Activate mod by pressing F7
+3. Push message through websocket to `ws://127.0.0.1:9149`
+
+Two types of messages is supported:
+
+#### Activate random effect
+```
+{ 
+   "type": "activate-random-effect", 
+   "cause": "Mr. Universe"
+}
+```
+`cause` - will be placed on screen near effect title. Can be used to output viewer name or etc.
+
+#### Activate specific effect
+```
+{ 
+   "type": "activate-specific-effect", 
+   "index": 66,
+   "cause": "Mr. Universe"
+}
+```
+`index` - index number of desired effect from config.json
+
+If specific effect is activated, the title will be white, If effect is selected by random, the title will be red
+
+- Timed activation of mods disabled
+- Twitch integration should be enabled for Websockets
+- F8 and F11 keys disabled
+- Websocket responses from server removed to improve stability
+
+
+<hr>
 <p align="center">
    <img src="https://i.imgur.com/uXrlAQW.png" alt="Chaos Mod RDR">
 </p>
-
 # Chaos Mod RDR
 This mod for **Red Dead Redemption 2** activates a random gameplay effect every 45 seconds. This effect can make it harder for you to play, help you, or just be neutral.
 
