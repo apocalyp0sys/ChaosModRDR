@@ -527,33 +527,33 @@ void ChaosMod::Update()
 		}
 	}
 
-	if (MetaActivationTime != 0 && GetTickCount() >= MetaActivationTime)
-	{
-		MetaActivationTime = 0;
+	//if (MetaActivationTime != 0 && GetTickCount() >= MetaActivationTime)
+	//{
+	//	MetaActivationTime = 0;
 
-		std::vector<MetaEffect*> enabledMetaEffects;
+	//	std::vector<MetaEffect*> enabledMetaEffects;
 
-		for (auto* effect : AllMetaEffects)
-		{
-			if (effect->bEnabled)
-			{
-				enabledMetaEffects.push_back(effect);
-			}
-		}
+	//	for (auto* effect : AllMetaEffects)
+	//	{
+	//		if (effect->bEnabled)
+	//		{
+	//			enabledMetaEffects.push_back(effect);
+	//		}
+	//	}
 
-		if (enabledMetaEffects.size() != 0)
-		{
-			MetaEffect* effect = enabledMetaEffects[rand() % enabledMetaEffects.size()];
+	//	if (enabledMetaEffects.size() != 0)
+	//	{
+	//		MetaEffect* effect = enabledMetaEffects[rand() % enabledMetaEffects.size()];
 
-			ActivateEffectAsNotRandom(effect);
-			activeMeta = effect;
+	//		ActivateEffectAsNotRandom(effect);
+	//		activeMeta = effect;
 
-			if (effect->ID == "total_chaos" && !bVotingEnabled)
-			{
-				ResetEffectsTimeout();
-			}
-		}
-	}
+	//		if (effect->ID == "total_chaos" && !bVotingEnabled)
+	//		{
+	//			ResetEffectsTimeout();
+	//		}
+	//	}
+	//}
 
 	std::string twitchViewerName = "";
 
@@ -747,17 +747,17 @@ void ChaosMod::DrawUI()
 
 	LinearColor color(143, 6, 6, 255);
 
-	if (activeMeta && activeMeta->ID == "total_chaos")
-	{
-		LinearColor startColor(143, 6, 6, 240);
-		LinearColor endColor(249, 200, 4, 240);
+	//if (activeMeta && activeMeta->ID == "total_chaos")
+	//{
+	//	LinearColor startColor(143, 6, 6, 240);
+	//	LinearColor endColor(249, 200, 4, 240);
 
-		float alpha = ((sin(metaEffectColorSinX) + 1.0f) / 2.0f);
+	//	float alpha = ((sin(metaEffectColorSinX) + 1.0f) / 2.0f);
 
-		color.R = Lerp(startColor.R, endColor.R, alpha);
-		color.G = Lerp(startColor.G, endColor.G, alpha);
-		color.B = Lerp(startColor.B, endColor.B, alpha);
-	}
+	//	color.R = Lerp(startColor.R, endColor.R, alpha);
+	//	color.G = Lerp(startColor.G, endColor.G, alpha);
+	//	color.B = Lerp(startColor.B, endColor.B, alpha);
+	//}
 
 	/** Draw progress bar foreground */
 	if (bEffectsActivatesAfterTimer) {
@@ -1114,8 +1114,8 @@ void ChaosMod::InitEffects()
 	}
 
 	AllMetaEffects = {
-		new MetaEffectTotalChaos(),
-		new MetaEffectComboTime()
+		/*new MetaEffectTotalChaos(),
+		new MetaEffectComboTime()*/
 	};
 
 	MetaEffectsMap.clear();
