@@ -42,6 +42,8 @@ If specific effect is activated, the title will be white, If effect is selected 
 - F8 and F11 keys disabled
 - Websocket responses from server removed to improve stability
 
+Some integration scripts to push websocket messages are available in `integration` folder
+
 ### Screenshot
 <img src="https://i.imgur.com/cm2Gx5d.jpeg" alt="Screenshot">
 
